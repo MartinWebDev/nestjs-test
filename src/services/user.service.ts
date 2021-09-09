@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { ObjectId } from 'mongodb';
+import { Types } from 'mongoose';
+import { CreateUserDto } from 'src/api/create-user.dto';
 
 import { AppConfigService } from 'src/config/app/config.service';
 import { UserRepository } from 'src/repositories/user.repository';
@@ -12,14 +13,19 @@ export class UserService {
   ) {}
 
   async getAllUsers() {
-    return await this._userRepository.find();
+    return await this._userRepository.findAll();
   }
 
   async getUserById(id: string) {
-    return await this._userRepository.findById(new ObjectId(id));
+    const idObj = new Types.ObjectId(id);
+    return await this._userRepository.findById(idObj);
   }
 
   async getUserByUserId(userId: string) {
     return await this._userRepository.findUser(userId);
+  }
+
+  async createUser(createUserDto: CreateUserDto) {
+    return await this._userRepository.create(createUserDto);
   }
 }

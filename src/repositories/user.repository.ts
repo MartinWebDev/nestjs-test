@@ -1,23 +1,36 @@
-import { Injectable } from '@nestjs/common';
-import { Filter } from 'mongodb';
-
-import { BaseRepository } from './base.repository';
+import { Injectable, Inject } from '@nestjs/common';
+import { Model, FilterQuery, Types } from 'mongoose';
+import { CreateUserDto } from 'src/api/create-user.dto';
+import { User } from 'src/interfaces/user.interface';
 
 @Injectable()
-export class UserRepository extends BaseRepository {
-  constructor() {
-    super('users');
+export class UserRepository {
+  constructor(
+    @Inject('USER_MODEL')
+    private _userModel: Model<User>,
+  ) {}
+
+  async findAll(): Promise<User[]> {
+    return await this._userModel.find().exec();
   }
 
   async findUser(userId: string): Promise<any[]> {
-    return await this.getDb()
+    return await this._userModel
       .find(this.collectionUserIdFilter(userId))
-      .toArray();
+      .exec();
   }
 
-  protected collectionUserIdFilter(userId: string): Filter<any> {
+  async findById(id: Types.ObjectId) {
+    return await this._userModel.findById(id).exec();
+  }
+
+  protected collectionUserIdFilter(userId: string): FilterQuery<User> {
     return {
       userId: userId,
     };
+  }
+
+  async create(createUserDto: CreateUserDto) {
+    return await this._userModel.create(createUserDto);
   }
 }

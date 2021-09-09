@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Param,
 } from '@nestjs/common';
+import { CreateUserDto } from 'src/api/create-user.dto';
 
 import { UserService } from 'src/services/user.service';
 
@@ -20,6 +21,16 @@ export class UserController {
   @Get('error')
   getError() {
     throw new HttpException(`I don't exist yet!`, HttpStatus.NOT_IMPLEMENTED);
+  }
+
+  @Get('createRandom')
+  async createRandom() {
+    const createUserDto: CreateUserDto = {
+      userId: '987654',
+      name: 'Alan',
+      dob: new Date('1980-10-10'),
+    };
+    return await this._userService.createUser(createUserDto);
   }
 
   @Get(':id')
