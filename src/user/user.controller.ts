@@ -23,6 +23,12 @@ export class UserController {
     throw new HttpException(`I don't exist yet!`, HttpStatus.NOT_IMPLEMENTED);
   }
 
+  @Get('tsmaperror')
+  getMapError() {
+    const nothing = undefined;
+    return nothing.test;
+  }
+
   @Get('createRandom')
   async createRandom() {
     const createUserDto: CreateUserDto = {
